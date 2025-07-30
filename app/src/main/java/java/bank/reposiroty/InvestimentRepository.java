@@ -55,8 +55,8 @@ public class InvestimentRepository {
         return wallet;
     }
 
-    public void updateAmount(final long percent) {
-        wallets.forEach(w -> w.updateAmount(percent));
+    public void updateAmount() {
+        wallets.forEach(w -> w.updateAmount(w.getInvestiment().tax()));
     }
 
     public Investiment findById(final long id) {

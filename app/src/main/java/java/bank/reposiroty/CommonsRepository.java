@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import static java.bank.model.BankService.ACCOUNT;
 import static lombok.AccessLevel.PRIVATE;
 
-import java.bank.exception.NotFundsEnoughException;
+import java.bank.exception.NoFundsEnoughException;
 import java.bank.model.Money;
 import java.bank.model.MoneyAudit;
 import java.bank.model.Wallet;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public final class CommonsRepository {
     public static void checkFundsForTransaction(final Wallet source, final long amount) {
         if (source.getFunds() < amount) {
-            throw new NotFundsEnoughException("Sua conta não tem dinheiro o suficiente para realizar essa transação.");
+            throw new NoFundsEnoughException("Sua conta não tem dinheiro o suficiente para realizar essa transação.");
         }
     }
 
