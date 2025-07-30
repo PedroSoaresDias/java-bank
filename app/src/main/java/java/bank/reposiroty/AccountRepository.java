@@ -1,6 +1,7 @@
 package java.bank.reposiroty;
 
 import java.bank.exception.AccountNotFoundException;
+import java.bank.exception.PixInUseException;
 import java.bank.model.AccountWallet;
 import java.util.List;
 
@@ -13,6 +14,14 @@ public class AccountRepository {
     private List<AccountWallet> accounts;
 
     public AccountWallet create(final List<String> pix, final long initialFunds) {
+        var pixInUse = accounts.stream().flatMap(a -> a.getPix().stream()).toList();
+
+        for (var p : pix) {
+            if (pixInUse.contains(p)) {
+                throw new PixInUseException("O pix '" + p + "' já está em uso.");
+            }
+        }
+
         var newAccount = new AccountWallet(initialFunds, pix);
         accounts.add(newAccount);
         return newAccount;
