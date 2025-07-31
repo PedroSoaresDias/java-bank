@@ -22,7 +22,7 @@ public class AccountWallet extends Wallet {
     }
 
     public void addMoney(final long amount, final String description) {
-        var money = generateMoney(amount, description);
+        List<Money> money = generateMoney(amount, description);
         this.money.addAll(money);
     }
 

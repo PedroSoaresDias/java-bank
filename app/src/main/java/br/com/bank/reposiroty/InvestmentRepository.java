@@ -11,42 +11,42 @@ import br.com.bank.model.InvestmentWallet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvestimentRepository {
+public class InvestmentRepository {
     private long nextId = 0;
     private final List<Investment> investments = new ArrayList<>();
     private final List<InvestmentWallet> wallets = new ArrayList<>();
 
     public Investment create(final long tax, final long initialFunds) {
         this.nextId++;
-        var investiment = new Investment(this.nextId, tax, initialFunds);
+        Investment investiment = new Investment(this.nextId, tax, initialFunds);
         investments.add(investiment);
         return investiment;
     }
 
     public InvestmentWallet initInvestiment(final AccountWallet account, final long id) {
         if (!wallets.isEmpty()) {
-            var accountsInUse = wallets.stream().map(InvestmentWallet::getAccount).toList();
+            List<AccountWallet> accountsInUse = wallets.stream().map(InvestmentWallet::getAccount).toList();
     
             if (accountsInUse.contains(account)) {
                 throw new AccountWithInvestimentsException("A conta '" + account + "' já possui um investimento.");
             }
         }
 
-        var investment = findById(id);
+        Investment investment = findById(id);
         checkFundsForTransaction(account, investment.initialFunds());
-        var wallet = new InvestmentWallet(investment, account, investment.initialFunds());
+        InvestmentWallet wallet = new InvestmentWallet(investment, account, investment.initialFunds());
         wallets.add(wallet);
         return wallet;
     }
 
     public InvestmentWallet deposit(final String pix, final long funds) {
-        var wallet = findWalletByAccountPix(pix);
+        InvestmentWallet wallet = findWalletByAccountPix(pix);
         wallet.addMoney(wallet.getAccount().reduceMoney(funds), wallet.getService(), "Investimento");
         return wallet;
     }
 
     public InvestmentWallet withdraw(final String pix, final long funds) {
-        var wallet = findWalletByAccountPix(pix);
+        InvestmentWallet wallet = findWalletByAccountPix(pix);
         checkFundsForTransaction(wallet, funds);
         wallet.getAccount().addMoney(wallet.reduceMoney(funds), wallet.getService(), "Saque de investimentos");
 

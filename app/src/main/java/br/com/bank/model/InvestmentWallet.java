@@ -5,6 +5,7 @@ import lombok.Getter;
 import static br.com.bank.model.BankService.INVESTMENT;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -21,10 +22,10 @@ public class InvestmentWallet extends Wallet {
     }
 
     public void updateAmount(final long percent) {
-        var amount = getFunds() * percent / 100;
-        var history = new MoneyAudit(UUID.randomUUID(), getService(), "Rendimentos", OffsetDateTime.now());
+        long amount = getFunds() * percent / 100;
+        MoneyAudit history = new MoneyAudit(UUID.randomUUID(), getService(), "Rendimentos", OffsetDateTime.now());
 
-        var money = Stream.generate(() -> new Money(history)).limit(amount).toList();
+        List<Money> money = Stream.generate(() -> new Money(history)).limit(amount).toList();
 
         this.money.addAll(money);
     }

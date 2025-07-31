@@ -3,19 +3,26 @@ package br.com.bank;
 import br.com.bank.exception.AccountNotFoundException;
 import br.com.bank.exception.NoFundsEnoughException;
 import br.com.bank.exception.WalletNotFoundException;
+import br.com.bank.model.AccountWallet;
+import br.com.bank.model.Investment;
+import br.com.bank.model.InvestmentWallet;
+import br.com.bank.model.MoneyAudit;
 import br.com.bank.reposiroty.AccountRepository;
-import br.com.bank.reposiroty.InvestimentRepository;
+import br.com.bank.reposiroty.InvestmentRepository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 
+import java.time.OffsetDateTime;
+
 public class App {
 
     private final static AccountRepository accountRepository = new AccountRepository();
-    private final static InvestimentRepository investimentRepository = new InvestimentRepository();
+    private final static InvestmentRepository investimentRepository = new InvestmentRepository();
 
     static Scanner scanner = new Scanner(System.in);
 
@@ -68,7 +75,7 @@ public class App {
         List<String> pix = Arrays.stream(scanner.next().split(";")).toList();
         System.out.println("Informe o valor inicial de depósito");
         long amount = scanner.nextLong();
-        var wallet = accountRepository.create(pix, amount);
+        AccountWallet wallet = accountRepository.create(pix, amount);
         System.out.println("Conta criada: " + wallet);
     }
     
@@ -77,7 +84,7 @@ public class App {
         int tax = scanner.nextInt();
         System.out.println("Informe o valor inicial de depósito");
         long initialFunds = scanner.nextLong();
-        var investiment = investimentRepository.create(tax, initialFunds);
+        Investment investiment = investimentRepository.create(tax, initialFunds);
         System.out.println("Investimento criado: " + investiment);
     }
     
@@ -124,10 +131,10 @@ public class App {
     private static void createWalletInvestiment() {
         System.out.println("Informe a chave Pix da conta:");
         String pix = scanner.next();
-        var account = accountRepository.findByPix(pix);
+        AccountWallet account = accountRepository.findByPix(pix);
         System.out.println("Informe o identificador do investimento");
         int investimentId = scanner.nextInt();
-        var investimentWallet = investimentRepository.initInvestiment(account, investimentId);
+        InvestmentWallet investimentWallet = investimentRepository.initInvestiment(account, investimentId);
         System.out.println("Conta de investimento criada: " + investimentWallet);
     }
 
@@ -161,7 +168,7 @@ public class App {
         String pix = scanner.next();
 
         try {
-            var sortedHistory = accountRepository.getHistory(pix);
+            Map<OffsetDateTime, List<MoneyAudit>> sortedHistory = accountRepository.getHistory(pix);
             sortedHistory.forEach((k, v) -> {
                 System.out.println(k.format(ISO_DATE_TIME));
                 System.out.println(v.getFirst().transactionId());

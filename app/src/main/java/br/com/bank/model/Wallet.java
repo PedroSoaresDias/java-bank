@@ -20,7 +20,7 @@ public abstract class Wallet {
     }
 
     protected List<Money> generateMoney(final long amount, final String description) {
-        var history = new MoneyAudit(UUID.randomUUID(), service, description, OffsetDateTime.now());
+        MoneyAudit history = new MoneyAudit(UUID.randomUUID(), service, description, OffsetDateTime.now());
         return Stream.generate(() -> new Money(history)).limit(amount).toList();
     }
     
@@ -29,7 +29,7 @@ public abstract class Wallet {
     }
 
     public void addMoney(final List<Money> money, final BankService service, final String description) {
-        var history = new MoneyAudit(UUID.randomUUID(), service, description, OffsetDateTime.now());
+        MoneyAudit history = new MoneyAudit(UUID.randomUUID(), service, description, OffsetDateTime.now());
         money.forEach(m -> m.addHistory(history));
         this.money.addAll(money);
     }
@@ -51,7 +51,7 @@ public abstract class Wallet {
     public String toString() {
         return "Wallet{ " +
             "service=" + service +
-            ", money= R$" +money.size() / 100 + "," + money.size() % 100 +
+            ", money= R$" + (money.size() / 100) + "," + (money.size() % 100) +
             "}";
     }
 }
