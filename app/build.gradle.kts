@@ -10,11 +10,18 @@ plugins {
     application
 }
 
+application{
+    mainClass.set("java.bank")
+}
+
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
     }
 }
+
+group = "br.com.bank"
+version = "1.0-SNAPSHOT"
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -27,12 +34,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.36")
 
     // Use JUnit Jupiter for testing.
-    testImplementation(libs.junit.jupiter)
-
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    // This dependency is used by the application.
-    implementation(libs.guava)
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -42,12 +45,7 @@ java {
     }
 }
 
-application {
-    // Define the main class for the application.
-    mainClass = "java.bank.App"
-}
-
-tasks.named<Test>("test") {
+tasks.test {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }

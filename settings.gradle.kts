@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "java-bank"
-include("app")
+include("App")
